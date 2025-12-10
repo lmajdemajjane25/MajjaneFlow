@@ -1,0 +1,129 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-3xl font-bold text-slate-800 bg-gradient-to-r from-slate-500 to-gray-500 text-gradient">{{ languageService.translate('configuration.title') }}</h1>
+    <p class="text-slate-500 mt-1">{{ languageService.translate('configuration.subtitle') }}</p>
+  </div>
+  
+  <!-- Tabs -->
+  <div>
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <button (click)="selectTab('types')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'types' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Service Types</button>
+        <button (click)="selectTab('providers')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'providers' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Providers</button>
+      </nav>
+    </div>
+  </div>
+
+  @if (activeTab() === 'types') {
+    <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+      <div class="p-4 flex justify-between items-center">
+        <h3 class="text-lg font-semibold">All Service Types</h3>
+        <button (click)="addType()" class="bg-gradient-to-r from-slate-500 to-gray-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">New Type</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
+              <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-slate-200">
+            @for(type of serviceTypes(); track type.id) {
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ type.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ type.description }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                  <button (click)="editType(type)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                  <button (click)="deleteType(type.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  } @else if (activeTab() === 'providers') {
+      <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+      <div class="p-4 flex justify-between items-center">
+        <h3 class="text-lg font-semibold">All Providers</h3>
+        <button (click)="addProvider()" class="bg-gradient-to-r from-slate-500 to-gray-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">New Provider</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Website</th>
+              <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-slate-200">
+            @for(provider of providers(); track provider.id) {
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ provider.name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"><a [href]="provider.website" target="_blank" class="text-indigo-600 hover:underline">{{ provider.website }}</a></td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                  <button (click)="editProvider(provider)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                  <button (click)="deleteProvider(provider.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Service Type Form Modal -->
+@if(showTypeForm()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">{{ editingType() ? 'Edit' : 'Create' }} Service Type</h2>
+            <form (submit)="$event.preventDefault(); saveType()">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Type Name</label>
+                        <input type="text" [value]="currentType().name" (input)="updateCurrentTypeField('name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Description</label>
+                        <input type="text" [value]="currentType().description" (input)="updateCurrentTypeField('description', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div class="flex justify-end gap-4 pt-6">
+                        <button type="button" (click)="cancelTypeForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Cancel</button>
+                        <button type="submit" class="bg-gradient-to-r from-slate-500 to-gray-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Save Type</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<!-- Provider Form Modal -->
+@if(showProviderForm()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">{{ editingProvider() ? 'Edit' : 'Create' }} Provider</h2>
+            <form (submit)="$event.preventDefault(); saveProvider()">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Provider Name</label>
+                        <input type="text" [value]="currentProvider().name" (input)="updateCurrentProviderField('name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Website</label>
+                        <input type="text" [value]="currentProvider().website" (input)="updateCurrentProviderField('website', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div class="flex justify-end gap-4 pt-6">
+                        <button type="button" (click)="cancelProviderForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Cancel</button>
+                        <button type="submit" class="bg-gradient-to-r from-slate-500 to-gray-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Save Provider</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

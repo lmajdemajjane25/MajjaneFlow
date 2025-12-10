@@ -1,0 +1,231 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div>
+      <h1 class="text-3xl font-bold text-slate-800 bg-gradient-to-r from-emerald-500 to-teal-500 text-gradient">{{ languageService.translate('services.title') }}</h1>
+      <p class="text-slate-500 mt-1">{{ languageService.translate('services.subtitle') }}</p>
+    </div>
+    <button (click)="addService()" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">{{ languageService.translate('services.new_button') }}</button>
+  </div>
+  
+  <!-- Search -->
+   <div class="relative w-full md:w-1/3">
+      <input type="text" placeholder="Search by name, client, type..." [value]="searchTerm()" (input)="onSearch($event)" class="w-full pl-10 pr-4 h-11 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+      </div>
+    </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Service</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Client</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Type</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Provider</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Expiration</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cost</th>
+            <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-slate-200">
+          @for(service of filteredServices(); track service.id) {
+            <tr class="hover:bg-slate-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{ service.service_name }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ getClientName(service.clientId) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ service.type }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ service.provider }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ service.expiration_date }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                      [class]="service.status === 'Active' ? 'bg-green-100 text-green-800' :
+                               service.status === 'Expired' ? 'bg-red-100 text-red-800' :
+                               service.status === 'Pending Renewal' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-800'">
+                  {{ service.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ getCurrencySymbol(service.currency) }}{{ service.cost }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                <button (click)="editService(service)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                <button (click)="deleteService(service.id)" class="text-red-600 hover:text-red-900">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Service Form Modal -->
+@if(showServiceForm()) {
+    <div class="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h2 class="text-xl font-bold text-slate-800">{{ editingService() ? 'Edit' : 'Add New' }} Service</h2>
+                <button (click)="cancelServiceForm()" class="p-2 rounded-full hover:bg-slate-100">
+                    <svg class="h-6 w-6 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            
+            <form (submit)="$event.preventDefault(); saveService()" class="p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <!-- Column 1 -->
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Client <span class="text-red-500">*</span></label>
+                        <div class="relative mt-1">
+                            <select [value]="currentService().clientId" (change)="updateCurrentServiceField('clientId', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white" required>
+                                <option value="0" disabled>Select a client</option>
+                                @for(client of clients(); track client.id) {
+                                    <option [value]="client.id">{{ client.company_name }}</option>
+                                }
+                            </select>
+                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Service Name <span class="text-red-500">*</span></label>
+                        <input type="text" placeholder="e.g., example.com" [value]="currentService().service_name" (input)="updateCurrentServiceField('service_name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Service Type <span class="text-red-500">*</span></label>
+                         <div class="relative mt-1">
+                            <select [value]="currentService().type" (change)="updateCurrentServiceField('type', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white" required>
+                                <option value="" disabled>Select service type</option>
+                                @for(type of serviceTypes(); track type.id) {
+                                    <option [value]="type.name">{{ type.name }}</option>
+                                }
+                            </select>
+                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Provider</label>
+                         <div class="relative mt-1">
+                             <select [value]="currentService().provider" (change)="updateCurrentServiceField('provider', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                <option value="" disabled>Select provider</option>
+                                @for(provider of providers(); track provider.id) {
+                                    <option [value]="provider.name">{{ provider.name }}</option>
+                                }
+                            </select>
+                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Status</label>
+                        <div class="relative mt-1">
+                            <select [value]="currentService().status" (change)="updateCurrentServiceField('status', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                <option>Active</option>
+                                <option>Pending Renewal</option>
+                                <option>Expired</option>
+                                <option>Cancelled</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Start Date</label>
+                        <input type="date" [value]="currentService().start_date" (input)="updateCurrentServiceField('start_date', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Expiration Date <span class="text-red-500">*</span></label>
+                        <input type="date" [value]="currentService().expiration_date" (input)="updateCurrentServiceField('expiration_date', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                    </div>
+                    
+                    <!-- Column 2 -->
+                    <div class="flex gap-2">
+                        <div class="flex-grow">
+                            <label class="text-sm font-medium text-slate-700">Cost</label>
+                            <input type="number" [value]="currentService().cost" (input)="updateCurrentServiceField('cost', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="w-28">
+                            <label class="text-sm font-medium text-slate-700">Currency</label>
+                            <div class="relative mt-1">
+                                <select [value]="currentService().currency" (change)="updateCurrentServiceField('currency', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="MAD">MAD</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-slate-700">Billing Cycle</label>
+                        <div class="relative mt-1">
+                            <select [value]="currentService().billing_cycle" (change)="updateCurrentServiceField('billing_cycle', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                <option>Annually</option>
+                                <option>Monthly</option>
+                                <option>Quarterly</option>
+                                <option>One-time</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <label class="text-sm font-medium text-slate-700">Renewal Type</label>
+                        <div class="mt-2 flex items-center space-x-6">
+                           <label class="flex items-center space-x-2 cursor-pointer">
+                               <input type="radio" name="renewal_type" value="Manual" class="custom-radio" [checked]="currentService().renewal_type === 'Manual'" (change)="updateCurrentServiceField('renewal_type', $event)">
+                               <span>Manual</span>
+                           </label>
+                           <label class="flex items-center space-x-2 cursor-pointer">
+                               <input type="radio" name="renewal_type" value="Auto-Renew" class="custom-radio" [checked]="currentService().renewal_type === 'Auto-Renew'" (change)="updateCurrentServiceField('renewal_type', $event)">
+                               <span>Auto-Renew</span>
+                           </label>
+                        </div>
+                    </div>
+                     <div>
+                        <label class="text-sm font-medium text-slate-700">Priority</label>
+                        <div class="relative mt-1">
+                            <select [value]="currentService().priority" (change)="updateCurrentServiceField('priority', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                <option>Medium</option>
+                                <option>Low</option>
+                                <option>High</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <label class="text-sm font-medium text-slate-700">Technical Contact</label>
+                        <input type="text" placeholder="Email or name" [value]="currentService().technical_contact" (input)="updateCurrentServiceField('technical_contact', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </div>
+                </div>
+
+                <!-- Renewal Reminder -->
+                <div class="mt-6 pt-4 border-t">
+                     <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" [checked]="currentService().renewal_reminder" (change)="updateCurrentServiceField('renewal_reminder', $event)" class="custom-checkbox">
+                        <div class="ml-3">
+                            <span class="font-medium text-slate-800">Rappel de renouvellement l'année prochaine</span>
+                            <p class="text-sm text-slate-500">Recevoir des alertes automatiques avant l'expiration (J-60, J-30, J-15, J-7)</p>
+                        </div>
+                    </label>
+                </div>
+            </form>
+            
+            <div class="flex justify-end gap-4 p-6 border-t bg-slate-50 rounded-b-2xl">
+                <button type="button" (click)="cancelServiceForm()" class="bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-300 transition">Cancel</button>
+                <button (click)="saveService()" type="button" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Save Service</button>
+            </div>
+        </div>
+    </div>
+}
