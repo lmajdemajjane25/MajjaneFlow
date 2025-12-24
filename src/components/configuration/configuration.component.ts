@@ -1,7 +1,7 @@
+
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfigurationService, ServiceType, Provider } from '../../services/configuration.service';
-import { LanguageService } from '../../services/language.service';
+import { ConfigurationService, ServiceType, Provider, PaymentMethod } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-configuration',
@@ -11,7 +11,6 @@ import { LanguageService } from '../../services/language.service';
 })
 export class ConfigurationComponent {
   private configService = inject(ConfigurationService);
-  public languageService = inject(LanguageService);
   activeTab = signal('types');
   
   // Service Types state
@@ -25,6 +24,12 @@ export class ConfigurationComponent {
   showProviderForm = signal(false);
   editingProvider = signal<Provider | null>(null);
   currentProvider = signal<Omit<Provider, 'id'>>({ name: '', website: ''});
+
+  // Payment Methods state
+  paymentMethods = this.configService.paymentMethods;
+  showPaymentMethodForm = signal(false);
+  editingPaymentMethod = signal<PaymentMethod | null>(null);
+  currentPaymentMethod = signal<Omit<PaymentMethod, 'id'>>({ name: '' });
 
 
   selectTab(tab: string) {
@@ -54,7 +59,7 @@ export class ConfigurationComponent {
   }
   
   deleteType(id: number) {
-    if (confirm('Are you sure you want to delete this service type?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce type de service ?')) {
       this.configService.deleteType(id);
     }
   }
@@ -92,7 +97,7 @@ export class ConfigurationComponent {
   }
 
   deleteProvider(id: number) {
-    if (confirm('Are you sure you want to delete this provider?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?')) {
       this.configService.deleteProvider(id);
     }
   }
@@ -104,5 +109,42 @@ export class ConfigurationComponent {
   updateCurrentProviderField(field: keyof Omit<Provider, 'id'>, event: Event) {
       const value = (event.target as HTMLInputElement).value;
       this.currentProvider.update(p => ({ ...p, [field]: value }));
+  }
+
+  // --- Payment Method Methods ---
+  addPaymentMethod() {
+    this.editingPaymentMethod.set(null);
+    this.currentPaymentMethod.set({ name: '' });
+    this.showPaymentMethodForm.set(true);
+  }
+
+  editPaymentMethod(method: PaymentMethod) {
+    this.editingPaymentMethod.set(method);
+    this.currentPaymentMethod.set({ name: method.name });
+    this.showPaymentMethodForm.set(true);
+  }
+
+  savePaymentMethod() {
+    if (this.editingPaymentMethod()) {
+      this.configService.updatePaymentMethod({ id: this.editingPaymentMethod()!.id, ...this.currentPaymentMethod() });
+    } else {
+      this.configService.addPaymentMethod(this.currentPaymentMethod());
+    }
+    this.cancelPaymentMethodForm();
+  }
+
+  deletePaymentMethod(id: number) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce mode de paiement ?')) {
+      this.configService.deletePaymentMethod(id);
+    }
+  }
+
+  cancelPaymentMethodForm() {
+    this.showPaymentMethodForm.set(false);
+  }
+
+  updateCurrentPaymentMethodField(field: keyof Omit<PaymentMethod, 'id'>, event: Event) {
+      const value = (event.target as HTMLInputElement).value;
+      this.currentPaymentMethod.update(p => ({ ...p, [field]: value }));
   }
 }

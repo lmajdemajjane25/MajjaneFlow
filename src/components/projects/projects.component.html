@@ -1,11 +1,12 @@
+
 <div class="space-y-6">
   <!-- Header -->
   <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-      <h1 class="text-3xl font-bold text-slate-800 bg-gradient-to-r from-amber-500 to-orange-500 text-gradient">{{ languageService.translate('projects.title') }}</h1>
-      <p class="text-slate-500 mt-1">{{ languageService.translate('projects.subtitle') }}</p>
+      <h1 class="text-4xl font-bold text-slate-800 bg-gradient-to-r from-amber-500 to-orange-500 text-gradient">Gestion de Projets</h1>
+      <p class="text-slate-600 mt-1 text-sm">Suivez l'avancement, les budgets et les échéanciers des projets.</p>
     </div>
-    <button (click)="addProject()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">{{ languageService.translate('projects.add_button') }}</button>
+    <button (click)="addProject()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Ajouter un Projet</button>
   </div>
   
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -13,21 +14,21 @@
         <div class="bg-white rounded-2xl shadow-lg border p-6 flex flex-col justify-between transform hover:-translate-y-1 transition-transform duration-300">
           <div>
             <div class="flex justify-between items-start">
-              <span class="px-2 py-1 text-xs font-semibold rounded-full" [class]="project.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : project.status === 'Planning' ? 'bg-indigo-100 text-indigo-800' : project.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full" [class]="project.status === 'En Cours' ? 'bg-blue-100 text-blue-800' : project.status === 'Planification' ? 'bg-indigo-100 text-indigo-800' : project.status === 'Terminé' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'">
                   {{ project.status }}
               </span>
-              <span class="text-xs font-bold" [class]="project.priority === 'High' ? 'text-red-500' : project.priority === 'Medium' ? 'text-amber-500' : 'text-slate-500'">
+              <span class="text-xs font-bold" [class]="project.priority === 'Haute' ? 'text-red-500' : project.priority === 'Moyenne' ? 'text-amber-500' : 'text-slate-500'">
                   {{ project.priority }}
               </span>
             </div>
             <h3 class="text-lg font-bold text-slate-800 mt-3">{{ project.name }}</h3>
-            <p class="text-sm text-slate-500">for {{ project.client }}</p>
+            <p class="text-sm text-slate-600">pour {{ project.client }}</p>
           </div>
 
           <div class="mt-4 space-y-4">
             <div>
-                <div class="flex justify-between text-sm font-medium text-slate-600 mb-1">
-                    <span>Progress</span>
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                    <span>Progression</span>
                     <span>{{project.completion_percentage}}%</span>
                 </div>
                 <div class="w-full bg-slate-200 rounded-full h-2.5">
@@ -35,12 +36,12 @@
                 </div>
             </div>
              <div>
-                <div class="flex justify-between text-sm font-medium text-slate-600 mb-1">
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
                     <span>Budget</span>
                     <span>€{{ project.spent }} / €{{ project.budget }}</span>
                 </div>
                 <div class="w-full bg-slate-200 rounded-full h-2.5">
-                    <div class="bg-gradient-to-r from-violet-400 to-purple-500 h-2.5 rounded-full" [style.width.%]="project.budget > 0 ? (project.spent / project.budget) * 100 : 0"></div>
+                    <div class="bg-gradient-to-r from-red-500 to-orange-500 h-2.5 rounded-full" [style.width.%]="project.budget > 0 ? (project.spent / project.budget) * 100 : 0"></div>
                 </div>
             </div>
           </div>
@@ -58,30 +59,30 @@
 @if(showProjectForm()) {
     <div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6">{{ editingProject() ? 'Edit' : 'Create' }} Project</h2>
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">{{ editingProject() ? 'Modifier le' : 'Créer un' }} Projet</h2>
             
             <form (submit)="$event.preventDefault(); saveProject()">
                 <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Project Name</label>
-                            <input type="text" [value]="currentProject().name" (input)="updateCurrentProjectField('name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                            <label class="text-xs text-slate-500">Nom du Projet</label>
+                            <input type="text" [value]="currentProject().name" (input)="updateCurrentProjectField('name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Client</label>
-                            <input type="text" [value]="currentProject().client" (input)="updateCurrentProjectField('client', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                            <label class="text-xs text-slate-500">Client</label>
+                            <input type="text" [value]="currentProject().client" (input)="updateCurrentProjectField('client', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                         </div>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-slate-700">Type</label>
-                        <input type="text" [value]="currentProject().type" (input)="updateCurrentProjectField('type', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label class="text-xs text-slate-500">Type</label>
+                        <input type="text" [value]="currentProject().type" (input)="updateCurrentProjectField('type', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     </div>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Status</label>
+                            <label class="text-xs text-slate-500">Statut</label>
                             <div class="relative mt-1">
-                                <select [value]="currentProject().status" (change)="updateCurrentProjectField('status', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
-                                    <option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option><option>Cancelled</option>
+                                <select [value]="currentProject().status" (change)="updateCurrentProjectField('status', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                    <option>Planification</option><option>En Cours</option><option>En Attente</option><option>Terminé</option><option>Annulé</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -89,10 +90,10 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Priority</label>
+                            <label class="text-xs text-slate-500">Priorité</label>
                              <div class="relative mt-1">
-                                <select [value]="currentProject().priority" (change)="updateCurrentProjectField('priority', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
-                                    <option>Low</option><option>Medium</option><option>High</option>
+                                <select [value]="currentProject().priority" (change)="updateCurrentProjectField('priority', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                    <option>Basse</option><option>Moyenne</option><option>Haute</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -102,21 +103,21 @@
                     </div>
                      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Budget (€)</label>
-                            <input type="number" [value]="currentProject().budget" (input)="updateCurrentProjectField('budget', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Budget (€)</label>
+                            <input type="number" [value]="currentProject().budget" (input)="updateCurrentProjectField('budget', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Spent (€)</label>
-                            <input type="number" [value]="currentProject().spent" (input)="updateCurrentProjectField('spent', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Dépensé (€)</label>
+                            <input type="number" [value]="currentProject().spent" (input)="updateCurrentProjectField('spent', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                          <div>
-                            <label class="text-sm font-medium text-slate-700">Completion (%)</label>
-                            <input type="number" min="0" max="100" [value]="currentProject().completion_percentage" (input)="updateCurrentProjectField('completion_percentage', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Complétion (%)</label>
+                            <input type="number" min="0" max="100" [value]="currentProject().completion_percentage" (input)="updateCurrentProjectField('completion_percentage', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
                      <div class="flex justify-end gap-4 pt-6">
-                        <button type="button" (click)="cancelProjectForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Cancel</button>
-                        <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Save Project</button>
+                        <button type="button" (click)="cancelProjectForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Annuler</button>
+                        <button type="submit" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Enregistrer le Projet</button>
                     </div>
                 </div>
             </form>

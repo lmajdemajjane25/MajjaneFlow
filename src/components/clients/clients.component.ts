@@ -1,7 +1,7 @@
+
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Client, ClientService } from '../../services/client.service';
-import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-clients',
@@ -11,15 +11,13 @@ import { LanguageService } from '../../services/language.service';
 })
 export class ClientsComponent {
     private clientService = inject(ClientService);
-    public languageService = inject(LanguageService);
     
     clients = this.clientService.clients;
     viewMode = signal<'grid' | 'list'>('grid');
     searchTerm = signal('');
 
-    activeClientsCount = computed(() => this.clients().filter(c => c.status === 'Active').length);
-    prospectClientsCount = computed(() => this.clients().filter(c => c.status === 'Prospect').length);
-    inactiveClientsCount = computed(() => this.clients().filter(c => c.status === 'Inactive').length);
+    activeClientsCount = computed(() => this.clients().filter(c => c.status === 'Actif').length);
+    inactiveClientsCount = computed(() => this.clients().filter(c => c.status === 'Inactif').length);
 
     filteredClients = computed(() => {
         const term = this.searchTerm().toLowerCase();
@@ -54,7 +52,7 @@ export class ClientsComponent {
     }
 
     deleteClient(clientId: number) {
-        if (confirm('Are you sure you want to delete this client?')) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
             this.clientService.deleteClient(clientId);
         }
     }

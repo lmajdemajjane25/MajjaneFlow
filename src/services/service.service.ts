@@ -6,14 +6,14 @@ export interface Service {
   service_name: string;
   type: string;
   provider: string;
-  status: 'Active' | 'Pending Renewal' | 'Expired' | 'Cancelled';
+  status: 'Actif' | 'En attente de renouvellement' | 'Expiré' | 'Annulé';
   start_date: string;
   expiration_date: string;
   cost: number;
   currency: 'USD' | 'EUR' | 'MAD';
-  billing_cycle: 'Monthly' | 'Quarterly' | 'Annually' | 'One-time';
-  renewal_type: 'Manual' | 'Auto-Renew';
-  priority: 'Low' | 'Medium' | 'High';
+  billing_cycle: 'Mensuel' | 'Trimestriel' | 'Annuel' | 'Unique';
+  renewal_type: 'Manuel' | 'Automatique';
+  priority: 'Basse' | 'Moyenne' | 'Haute';
   technical_contact: string;
   renewal_reminder: boolean;
 }
@@ -24,9 +24,9 @@ export interface Service {
 export class ServiceService {
 
   private initialServices: Service[] = [
-    { id: 1, service_name: 'Pro Web Hosting', clientId: 1, type: 'Hosting', provider: 'GoDaddy', expiration_date: this.getDateInFuture(5), status: 'Active', cost: 299, currency: 'USD', start_date: '2023-01-01', billing_cycle: 'Annually', renewal_type: 'Auto-Renew', priority: 'High', technical_contact: 'tech@innovate.com', renewal_reminder: true },
-    { id: 2, service_name: 'Domain innovacorp.com', clientId: 1, type: 'Domain', provider: 'Namecheap', expiration_date: this.getDateInFuture(12), status: 'Active', cost: 15, currency: 'USD', start_date: '2023-01-15', billing_cycle: 'Annually', renewal_type: 'Manual', priority: 'Medium', technical_contact: '', renewal_reminder: true },
-    { id: 3, service_name: 'Quantum SSL', clientId: 2, type: 'Security', provider: 'Sectigo', expiration_date: this.getDateInFuture(25), status: 'Active', cost: 75, currency: 'EUR', start_date: '2023-02-01', billing_cycle: 'Annually', renewal_type: 'Manual', priority: 'High', technical_contact: 'ops@quantum.co', renewal_reminder: true },
+    { id: 1, service_name: 'Hébergement Web Pro', clientId: 1, type: 'Hébergement', provider: 'GoDaddy', expiration_date: this.getDateInFuture(5), status: 'Actif', cost: 299, currency: 'USD', start_date: '2023-01-01', billing_cycle: 'Annuel', renewal_type: 'Automatique', priority: 'Haute', technical_contact: 'tech@innovate.com', renewal_reminder: true },
+    { id: 2, service_name: 'Domaine innovacorp.com', clientId: 1, type: 'Domaine', provider: 'Namecheap', expiration_date: this.getDateInFuture(12), status: 'Actif', cost: 15, currency: 'USD', start_date: '2023-01-15', billing_cycle: 'Annuel', renewal_type: 'Manuel', priority: 'Moyenne', technical_contact: '', renewal_reminder: true },
+    { id: 3, service_name: 'Certificat SSL Quantum', clientId: 2, type: 'Sécurité', provider: 'Sectigo', expiration_date: this.getDateInFuture(25), status: 'Actif', cost: 75, currency: 'EUR', start_date: '2023-02-01', billing_cycle: 'Annuel', renewal_type: 'Manuel', priority: 'Haute', technical_contact: 'ops@quantum.co', renewal_reminder: true },
   ];
   services = signal<Service[]>(this.initialServices);
 
@@ -38,14 +38,14 @@ export class ServiceService {
         service_name: '',
         type: '',
         provider: '',
-        status: 'Active',
+        status: 'Actif',
         start_date: new Date().toISOString().split('T')[0],
         expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
         cost: 0,
         currency: 'USD',
-        billing_cycle: 'Annually',
-        renewal_type: 'Manual',
-        priority: 'Medium',
+        billing_cycle: 'Annuel',
+        renewal_type: 'Manuel',
+        priority: 'Moyenne',
         technical_contact: '',
         renewal_reminder: true
     };

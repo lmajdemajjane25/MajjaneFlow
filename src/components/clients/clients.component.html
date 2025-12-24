@@ -1,37 +1,31 @@
+
 <div class="space-y-6">
   <!-- Header -->
-  <div>
-    <h1 class="text-3xl font-bold text-slate-800 bg-gradient-to-r from-violet-500 to-purple-500 text-gradient">{{ languageService.translate('clients.title') }}</h1>
-    <p class="text-slate-500 mt-1">{{ languageService.translate('clients.subtitle') }}</p>
+  <div class="p-6 bg-violet-50 rounded-2xl border border-violet-100 shadow-sm">
+    <h1 class="text-4xl font-bold text-slate-800 bg-gradient-to-r from-violet-500 to-purple-500 text-gradient">Gestion des Clients</h1>
+    <p class="text-slate-600 mt-1 text-sm">Recherchez, filtrez et gérez tous vos clients en un seul endroit.</p>
   </div>
 
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="p-4 bg-white rounded-2xl shadow-lg border flex items-center space-x-4">
-      <div class="p-3 rounded-xl bg-blue-100 text-blue-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.122-1.28-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.122-1.28.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+      <div class="p-3 rounded-xl bg-violet-100 text-violet-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.122-1.28-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.122-1.28.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
       <div>
-        <p class="text-slate-500 text-sm">Total Clients</p>
+        <p class="text-violet-700 text-xs font-semibold">Clients Totaux</p>
         <p class="text-2xl font-bold text-slate-800">{{ clients().length }}</p>
       </div>
     </div>
     <div class="p-4 bg-white rounded-2xl shadow-lg border flex items-center space-x-4">
-      <div class="p-3 rounded-xl bg-green-100 text-green-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+      <div class="p-3 rounded-xl bg-violet-100 text-violet-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
       <div>
-        <p class="text-slate-500 text-sm">Active</p>
+        <p class="text-violet-700 text-xs font-semibold">Actifs</p>
         <p class="text-2xl font-bold text-slate-800">{{ activeClientsCount() }}</p>
       </div>
     </div>
     <div class="p-4 bg-white rounded-2xl shadow-lg border flex items-center space-x-4">
-      <div class="p-3 rounded-xl bg-amber-100 text-amber-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></div>
+      <div class="p-3 rounded-xl bg-violet-100 text-violet-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div>
       <div>
-        <p class="text-slate-500 text-sm">Prospects</p>
-        <p class="text-2xl font-bold text-slate-800">{{ prospectClientsCount() }}</p>
-      </div>
-    </div>
-    <div class="p-4 bg-white rounded-2xl shadow-lg border flex items-center space-x-4">
-      <div class="p-3 rounded-xl bg-slate-100 text-slate-600"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div>
-      <div>
-        <p class="text-slate-500 text-sm">Inactive</p>
+        <p class="text-violet-700 text-xs font-semibold">Inactifs</p>
         <p class="text-2xl font-bold text-slate-800">{{ inactiveClientsCount() }}</p>
       </div>
     </div>
@@ -40,7 +34,7 @@
   <!-- Controls -->
   <div class="flex flex-col md:flex-row justify-between items-center gap-4">
     <div class="relative w-full md:w-1/3">
-      <input type="text" placeholder="Search by name, email..." [value]="searchTerm()" (input)="onSearch($event)" class="w-full pl-10 pr-4 h-11 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      <input type="text" placeholder="Rechercher par nom, email..." [value]="searchTerm()" (input)="onSearch($event)" class="w-full pl-10 pr-4 h-11 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
       </div>
@@ -55,7 +49,7 @@
             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
         </button>
       </div>
-      <button (click)="addClient()" class="bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">{{ languageService.translate('clients.add_button') }}</button>
+      <button (click)="addClient()" class="bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Ajouter un Client</button>
     </div>
   </div>
 
@@ -66,10 +60,10 @@
         <div class="bg-white rounded-2xl shadow-lg border p-6 space-y-4 transform hover:-translate-y-1 transition-transform duration-300">
           <div class="flex justify-between items-start">
             <div>
-              <h3 class="text-lg font-bold text-slate-800">{{ client.company_name }}</h3>
-              <p class="text-sm text-slate-500">{{ client.industry }}</p>
+              <h3 class="text-lg font-bold text-violet-800">{{ client.company_name }}</h3>
+              <p class="text-sm text-slate-600">{{ client.industry }}</p>
             </div>
-            <span class="px-2 py-1 text-xs font-semibold rounded-full" [class]="client.status === 'Active' ? 'bg-green-100 text-green-800' : client.status === 'Prospect' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-800'">
+            <span class="px-2 py-1 text-xs font-semibold rounded-full" [class]="client.status === 'Actif' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'">
                 {{ client.status }}
             </span>
           </div>
@@ -93,7 +87,7 @@
           </div>
           <div class="flex justify-between items-center border-t border-slate-200 pt-4">
             <div>
-              <p class="text-xs text-slate-500">Monthly Budget</p>
+              <p class="text-xs text-slate-500">Budget Mensuel</p>
               <p class="font-bold text-slate-700">€{{ client.monthly_budget }}</p>
             </div>
             <div class="flex space-x-2">
@@ -109,12 +103,12 @@
     <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-slate-200">
-          <thead class="bg-slate-50">
+          <thead class="bg-violet-50">
             <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Company</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Contact</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Budget</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-violet-700 uppercase tracking-wider">Entreprise</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-violet-700 uppercase tracking-wider">Contact</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-violet-700 uppercase tracking-wider">Statut</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-violet-700 uppercase tracking-wider">Budget</th>
               <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
             </tr>
           </thead>
@@ -123,21 +117,21 @@
               <tr class="hover:bg-slate-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-slate-900">{{ client.company_name }}</div>
-                  <div class="text-sm text-slate-500">{{ client.industry }}</div>
+                  <div class="text-sm text-slate-600">{{ client.industry }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm text-slate-900">{{ client.primary_contact_name }}</div>
-                  <div class="text-sm text-slate-500">{{ client.email }}</div>
+                  <div class="text-sm text-slate-600">{{ client.email }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [class]="client.status === 'Active' ? 'bg-green-100 text-green-800' : client.status === 'Prospect' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-800'">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [class]="client.status === 'Actif' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-800'">
                     {{ client.status }}
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">€{{ client.monthly_budget }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">€{{ client.monthly_budget }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                  <button (click)="editClient(client)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
-                  <button (click)="deleteClient(client.id)" class="text-red-600 hover:text-red-900">Delete</button>
+                  <button (click)="editClient(client)" class="text-indigo-600 hover:text-indigo-900">Modifier</button>
+                  <button (click)="deleteClient(client.id)" class="text-red-600 hover:text-red-900">Supprimer</button>
                 </td>
               </tr>
             }
@@ -152,26 +146,26 @@
 @if(showClientForm()) {
     <div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6">{{ editingClient() ? 'Edit' : 'Create' }} Client</h2>
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 bg-gradient-to-r from-violet-500 to-purple-500 text-gradient">{{ editingClient() ? 'Modifier le' : 'Créer un' }} Client</h2>
             
             <form (submit)="$event.preventDefault(); saveClient()">
                 <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Company Name</label>
-                            <input type="text" [value]="currentClient().company_name" (input)="updateCurrentClientField('company_name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                            <label class="text-xs text-slate-500">Nom de l'entreprise</label>
+                            <input type="text" [value]="currentClient().company_name" (input)="updateCurrentClientField('company_name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Industry</label>
-                            <input type="text" [value]="currentClient().industry" (input)="updateCurrentClientField('industry', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Secteur d'activité</label>
+                            <input type="text" [value]="currentClient().industry" (input)="updateCurrentClientField('industry', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Status</label>
+                            <label class="text-xs text-slate-500">Statut</label>
                             <div class="relative mt-1">
-                                <select [value]="currentClient().status" (change)="updateCurrentClientField('status', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
-                                    <option>Active</option><option>Prospect</option><option>Inactive</option>
+                                <select [value]="currentClient().status" (change)="updateCurrentClientField('status', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                    <option>Actif</option><option>Inactif</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -179,10 +173,10 @@
                             </div>
                         </div>
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Account Type</label>
+                            <label class="text-xs text-slate-500">Type de compte</label>
                             <div class="relative mt-1">
-                                <select [value]="currentClient().account_type" (change)="updateCurrentClientField('account_type', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
-                                    <option>Basic</option><option>Standard</option><option>Premium</option>
+                                <select [value]="currentClient().account_type" (change)="updateCurrentClientField('account_type', $event)" class="appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                                    <option>Basique</option><option>Standard</option><option>Premium</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -191,36 +185,36 @@
                         </div>
                     </div>
                     <div class="border-t pt-4">
-                        <label class="text-sm font-medium text-slate-700">Primary Contact Name</label>
-                        <input type="text" [value]="currentClient().primary_contact_name" (input)="updateCurrentClientField('primary_contact_name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                        <label class="text-xs text-slate-500">Nom du contact principal</label>
+                        <input type="text" [value]="currentClient().primary_contact_name" (input)="updateCurrentClientField('primary_contact_name', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">Email</label>
-                            <input type="email" [value]="currentClient().email" (input)="updateCurrentClientField('email', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+                            <label class="text-xs text-slate-500">Email</label>
+                            <input type="email" [value]="currentClient().email" (input)="updateCurrentClientField('email', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
                         </div>
                          <div>
-                            <label class="text-sm font-medium text-slate-700">Phone</label>
-                            <input type="tel" [value]="currentClient().phone" (input)="updateCurrentClientField('phone', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Téléphone</label>
+                            <input type="tel" [value]="currentClient().phone" (input)="updateCurrentClientField('phone', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm font-medium text-slate-700">City</label>
-                            <input type="text" [value]="currentClient().city" (input)="updateCurrentClientField('city', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Ville</label>
+                            <input type="text" [value]="currentClient().city" (input)="updateCurrentClientField('city', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                          <div>
-                            <label class="text-sm font-medium text-slate-700">Country</label>
-                            <input type="text" [value]="currentClient().country" (input)="updateCurrentClientField('country', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <label class="text-xs text-slate-500">Pays</label>
+                            <input type="text" [value]="currentClient().country" (input)="updateCurrentClientField('country', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         </div>
                     </div>
                      <div>
-                        <label class="text-sm font-medium text-slate-700">Monthly Budget (€)</label>
-                        <input type="number" [value]="currentClient().monthly_budget" (input)="updateCurrentClientField('monthly_budget', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        <label class="text-xs text-slate-500">Budget Mensuel (€)</label>
+                        <input type="number" [value]="currentClient().monthly_budget" (input)="updateCurrentClientField('monthly_budget', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     </div>
                      <div class="flex justify-end gap-4 pt-6">
-                        <button type="button" (click)="cancelClientForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Cancel</button>
-                        <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Save Client</button>
+                        <button type="button" (click)="cancelClientForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Annuler</button>
+                        <button type="submit" class="bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Enregistrer le Client</button>
                     </div>
                 </div>
             </form>

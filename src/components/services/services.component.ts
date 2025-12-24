@@ -1,9 +1,9 @@
+
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigurationService } from '../../services/configuration.service';
 import { ClientService } from '../../services/client.service';
 import { Service, ServiceService } from '../../services/service.service';
-import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-services',
@@ -15,7 +15,6 @@ export class ServicesComponent {
     private configService = inject(ConfigurationService);
     private clientService = inject(ClientService);
     private serviceService = inject(ServiceService);
-    public languageService = inject(LanguageService);
 
     clients = this.clientService.clients;
     serviceTypes = this.configService.serviceTypes;
@@ -25,7 +24,7 @@ export class ServicesComponent {
     searchTerm = signal('');
 
     getClientName(clientId: number): string {
-      return this.clients().find(c => c.id === clientId)?.company_name || 'Unknown Client';
+      return this.clients().find(c => c.id === clientId)?.company_name || 'Client Inconnu';
     }
 
     filteredServices = computed(() => {
@@ -72,7 +71,7 @@ export class ServicesComponent {
     }
 
     deleteService(serviceId: number) {
-        if (confirm('Are you sure you want to delete this service?')) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
             this.serviceService.deleteService(serviceId);
         }
     }

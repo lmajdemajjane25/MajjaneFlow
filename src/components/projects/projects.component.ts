@@ -1,14 +1,14 @@
+
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LanguageService } from '../../services/language.service';
 
 export interface Project {
   id: number;
   name: string;
   client: string;
   type: string;
-  status: 'In Progress' | 'Planning' | 'Completed' | 'On Hold' | 'Cancelled';
-  priority: 'High' | 'Medium' | 'Low';
+  status: 'En Cours' | 'Planification' | 'Terminé' | 'En Attente' | 'Annulé';
+  priority: 'Haute' | 'Moyenne' | 'Basse';
   completion_percentage: number;
   budget: number;
   spent: number;
@@ -21,13 +21,12 @@ export interface Project {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsComponent {
-  public languageService = inject(LanguageService);
 
   private initialProjects: Project[] = [
-    { id: 1, name: 'Website Redesign', client: 'Innovate Corp', type: 'Web Development', status: 'In Progress', priority: 'High', completion_percentage: 75, budget: 15000, spent: 11250 },
-    { id: 2, name: 'Q3 Marketing Campaign', client: 'Quantum Solutions', type: 'Marketing', status: 'Planning', priority: 'Medium', completion_percentage: 10, budget: 25000, spent: 2000 },
-    { id: 3, name: 'E-commerce SEO', client: 'Stellar Goods', type: 'SEO', status: 'Completed', priority: 'High', completion_percentage: 100, budget: 8000, spent: 7800 },
-    { id: 4, name: 'Internal CRM Dev', client: 'Apex Industries', type: 'Software Dev', status: 'On Hold', priority: 'Low', completion_percentage: 40, budget: 30000, spent: 12000 },
+    { id: 1, name: 'Refonte du site Web', client: 'Innovate Corp', type: 'Développement Web', status: 'En Cours', priority: 'Haute', completion_percentage: 75, budget: 15000, spent: 11250 },
+    { id: 2, name: 'Campagne Marketing T3', client: 'Quantum Solutions', type: 'Marketing', status: 'Planification', priority: 'Moyenne', completion_percentage: 10, budget: 25000, spent: 2000 },
+    { id: 3, name: 'SEO E-commerce', client: 'Stellar Goods', type: 'SEO', status: 'Terminé', priority: 'Haute', completion_percentage: 100, budget: 8000, spent: 7800 },
+    { id: 4, name: 'Développement CRM Interne', client: 'Apex Industries', type: 'Développement Logiciel', status: 'En Attente', priority: 'Basse', completion_percentage: 40, budget: 30000, spent: 12000 },
   ];
   projects = signal<Project[]>(this.initialProjects);
   
@@ -42,8 +41,8 @@ export class ProjectsComponent {
       name: '',
       client: '',
       type: '',
-      status: 'Planning',
-      priority: 'Medium',
+      status: 'Planification',
+      priority: 'Moyenne',
       completion_percentage: 0,
       budget: 0,
       spent: 0
@@ -63,7 +62,7 @@ export class ProjectsComponent {
   }
 
   deleteProject(projectId: number) {
-    if (confirm('Are you sure you want to delete this project?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
       this.projects.update(projects => projects.filter(p => p.id !== projectId));
     }
   }

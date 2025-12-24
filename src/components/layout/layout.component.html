@@ -1,3 +1,4 @@
+
 <!-- Mobile Sidebar -->
 @if (isSidebarOpen()) {
   <div class="md:hidden" role="dialog" aria-modal="true">
@@ -5,11 +6,11 @@
     <div class="fixed inset-0 bg-gray-600 bg-opacity-75" (click)="toggleSidebar()"></div>
     
     <div class="fixed inset-0 flex z-40">
-      <div class="relative flex-1 flex flex-col max-w-xs w-full bg-slate-100">
+      <div class="relative flex-1 flex flex-col max-w-xs w-full bg-neutral-100 shadow-xl">
         <!-- Close button -->
         <div class="absolute top-0 right-0 -mr-12 pt-2">
           <button type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" (click)="toggleSidebar()">
-            <span class="sr-only">Close sidebar</span>
+            <span class="sr-only">Fermer la barre latérale</span>
             <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -17,35 +18,33 @@
         </div>
 
         <!-- Mobile Sidebar Content -->
-        <div class="flex items-center h-16 flex-shrink-0 px-4 bg-slate-100 border-b">
+        <div class="flex items-center justify-center h-16 flex-shrink-0 px-4 border-b">
            <div class="flex items-center">
                 <svg class="h-8 w-auto text-indigo-500" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="logo-gradient-mobile" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366F1;"/><stop offset="100%" style="stop-color:#3B82F6;"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM12 8.75L13.75 11.25L16.25 12L13.75 12.75L12 15.25L10.25 12.75L7.75 12L10.25 11.25L12 8.75Z" fill="url(#logo-gradient-mobile)"/></svg>
                 <span class="ml-2 font-bold text-xl text-slate-800">MajjaneFlow</span>
             </div>
         </div>
-        <div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-          <nav class="flex-1 px-2 space-y-1">
+        <div class="flex-1 h-0 p-4 overflow-y-auto">
+          <nav class="flex-1 space-y-2">
             @for (item of navItems; track item.path) {
-              <a [routerLink]="item.path" (click)="isSidebarOpen.set(false)" [class]="'group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-200 transition-colors duration-200 ' + (activePath() === item.path ? item.activeClass : 'text-slate-700')">
-                 <div class="mr-3 h-6 w-6 rounded-lg flex items-center justify-center text-white" [class]="item.iconBgClass">
-                     @if(item.icon === 'home') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> }
-                     @if(item.icon === 'users') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
-                     @if(item.icon === 'server') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg> }
-                     @if(item.icon === 'briefcase') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> }
-                     @if(item.icon === 'cash') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> }
-                     @if(item.icon === 'chart-bar') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg> }
-                     @if(item.icon === 'cog') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
-                </div>
-                {{ languageService.translate(item.name) }}
+              <a [routerLink]="item.path" (click)="isSidebarOpen.set(false)" class="group flex items-center w-full h-16 px-6 text-base font-medium rounded-xl transform transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+                 [class]="activePath() === item.path ? 'bg-gradient-to-r text-white shadow-lg ' + item.gradientClass : inactiveLinkClass">
+                 @if(item.icon === 'home') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> }
+                 @if(item.icon === 'users') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
+                 @if(item.icon === 'server') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg> }
+                 @if(item.icon === 'briefcase') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> }
+                 @if(item.icon === 'cash') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> }
+                 @if(item.icon === 'cog') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
+                {{ item.name }}
               </a>
             }
           </nav>
         </div>
         <div class="flex-shrink-0 flex p-4">
-          <div class="p-4 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-xl w-full">
-            <h4 class="font-bold">{{ languageService.translate('premium.title') }}</h4>
-            <p class="text-xs text-slate-300 mt-1">{{ languageService.translate('premium.desc') }}</p>
-            <button class="mt-4 w-full bg-white text-slate-800 font-semibold py-2 rounded-xl text-sm hover:bg-slate-200 transition">{{ languageService.translate('premium.button') }}</button>
+          <div class="p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg w-full">
+            <h4 class="font-bold">Passez à Premium</h4>
+            <p class="text-xs text-indigo-200 mt-1">Débloquez toutes les fonctionnalités et obtenez un accès illimité.</p>
+            <button class="mt-4 w-full bg-white text-indigo-600 font-semibold py-2 px-4 rounded-lg border border-gray-300 text-sm hover:bg-slate-50 transition">Mettre à niveau</button>
           </div>
         </div>
       </div>
@@ -56,39 +55,36 @@
   </div>
 }
 
-<div class="h-screen flex overflow-hidden bg-slate-50">
+<div class="h-screen flex overflow-hidden bg-slate-100">
   <!-- Desktop Sidebar -->
   <aside class="hidden md:flex md:flex-shrink-0">
-    <div class="flex flex-col w-64">
-      <div class="flex items-center h-16 flex-shrink-0 px-4 bg-slate-100 border-r">
+    <div class="flex flex-col w-64 bg-neutral-100 border-r border-slate-200 shadow-lg">
+      <div class="flex items-center justify-center h-16 flex-shrink-0 px-4 border-b">
         <div class="flex items-center">
-            <svg class="h-8 w-auto text-indigo-500" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366F1;"/><stop offset="100%" style="stop-color:#3B82F6;"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM12 8.75L13.75 11.25L16.25 12L13.75 12.75L12 15.25L10.25 12.75L7.75 12L10.25 11.25L12 8.75Z" fill="url(#logo-gradient)"/></svg>
+            <svg class="h-8 w-auto" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366F1;"/><stop offset="100%" style="stop-color:#3B82F6;"/></linearGradient></defs><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM12 8.75L13.75 11.25L16.25 12L13.75 12.75L12 15.25L10.25 12.75L7.75 12L10.25 11.25L12 8.75Z" fill="url(#logo-gradient)"/></svg>
             <span class="ml-2 font-bold text-xl text-slate-800">MajjaneFlow</span>
         </div>
       </div>
-      <div class="flex-1 flex flex-col overflow-y-auto border-r bg-slate-100">
-        <nav class="flex-1 px-2 py-4 space-y-1">
+      <div class="flex-1 flex flex-col overflow-y-auto p-3">
+        <nav class="flex-1 space-y-2">
           @for (item of navItems; track item.path) {
-            <a [routerLink]="item.path" [class]="'group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-200 transition-colors duration-200 ' + (activePath() === item.path ? item.activeClass : 'text-slate-700')">
-              <div class="mr-3 h-6 w-6 rounded-lg flex items-center justify-center text-white" [class]="item.iconBgClass">
-                 <!-- Icons -->
-                 @if(item.icon === 'home') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> }
-                 @if(item.icon === 'users') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
-                 @if(item.icon === 'server') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg> }
-                 @if(item.icon === 'briefcase') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> }
-                 @if(item.icon === 'cash') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> }
-                 @if(item.icon === 'chart-bar') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg> }
-                 @if(item.icon === 'cog') { <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
-              </div>
-              {{ languageService.translate(item.name) }}
+            <a [routerLink]="item.path" class="group flex items-center w-full h-16 px-6 text-base font-medium rounded-xl transform transition-all duration-200 hover:shadow-lg hover:scale-[1.02]"
+                [class]="activePath() === item.path ? 'bg-gradient-to-r text-white shadow-lg ' + item.gradientClass : inactiveLinkClass">
+                 @if(item.icon === 'home') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> }
+                 @if(item.icon === 'users') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
+                 @if(item.icon === 'server') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg> }
+                 @if(item.icon === 'briefcase') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg> }
+                 @if(item.icon === 'cash') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg> }
+                 @if(item.icon === 'cog') { <svg xmlns="http://www.w3.org/2000/svg" [class]="'h-6 w-6 mr-4 ' + (activePath() === item.path ? item.activeIconColor : inactiveIconClass)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> }
+              {{ item.name }}
             </a>
           }
         </nav>
-        <div class="p-4">
-          <div class="p-4 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-xl">
-            <h4 class="font-bold">{{ languageService.translate('premium.title') }}</h4>
-            <p class="text-xs text-slate-300 mt-1">{{ languageService.translate('premium.desc') }}</p>
-            <button class="mt-4 w-full bg-white text-slate-800 font-semibold py-2 rounded-xl text-sm hover:bg-slate-200 transition">{{ languageService.translate('premium.button') }}</button>
+        <div class="mt-auto p-4">
+          <div class="p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg">
+            <h4 class="font-bold text-white">Passez à Premium</h4>
+            <p class="text-xs text-indigo-200 mt-1">Débloquez toutes les fonctionnalités.</p>
+            <button class="mt-4 w-full bg-white text-indigo-600 font-semibold py-2 px-4 rounded-lg border border-gray-300 text-sm hover:bg-slate-50 transition">Mettre à niveau</button>
           </div>
         </div>
       </div>
@@ -100,7 +96,7 @@
     <div class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow-sm border-b border-gray-200">
       <!-- Mobile menu button -->
       <button (click)="toggleSidebar()" class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden">
-        <span class="sr-only">Open sidebar</span>
+        <span class="sr-only">Ouvrir la barre latérale</span>
         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -108,19 +104,11 @@
 
       <div class="flex-1 px-4 flex justify-between">
         <div class="flex-1 flex items-center">
-          <h1 class="text-lg font-semibold text-slate-700">{{ languageService.translate('header.title') }}</h1>
+          <h1 class="text-lg font-semibold text-slate-700">MajjaneFlow - Hub d'Agence</h1>
         </div>
         <div class="ml-4 flex items-center md:ml-6">
-           <div class="flex items-center space-x-2 text-sm font-medium">
-            <span [class]="{'opacity-50': languageService.language() === 'fr'}">🇬🇧</span>
-            <button (click)="languageService.toggleLanguage()" class="relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 bg-gray-200">
-                <span class="inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200" [class]="languageService.language() === 'en' ? 'translate-x-0' : 'translate-x-5'"></span>
-            </button>
-            <span [class]="{'opacity-50': languageService.language() === 'en'}">🇫🇷</span>
-           </div>
-
           <button class="ml-4 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none relative">
-            <span class="sr-only">View notifications</span>
+            <span class="sr-only">Voir les notifications</span>
             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
@@ -133,7 +121,7 @@
           <div class="ml-3 relative">
             <div>
               <button (click)="toggleProfileMenu()" type="button" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                <span class="sr-only">Open user menu</span>
+                <span class="sr-only">Ouvrir le menu utilisateur</span>
                 <img class="h-8 w-8 rounded-full" src="https://picsum.photos/id/237/100/100" alt="">
               </button>
             </div>
@@ -143,10 +131,10 @@
                 <div class="px-4 py-2 border-b">
                   <p class="text-sm font-semibold text-gray-700">John Doe</p>
                   <p class="text-xs text-gray-500 truncate">john.doe@majjane.flow</p>
-                  <p class="text-xs text-indigo-500 font-medium">Administrator</p>
+                  <p class="text-xs text-indigo-500 font-medium">Administrateur</p>
                 </div>
-                <a routerLink="/settings" (click)="isProfileMenuOpen.set(false)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Settings</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Sign out</a>
+                <a routerLink="/settings" (click)="isProfileMenuOpen.set(false)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Paramètres</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Déconnexion</a>
               </div>
             }
           </div>

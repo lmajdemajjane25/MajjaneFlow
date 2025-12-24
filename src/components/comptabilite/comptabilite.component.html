@@ -2,10 +2,452 @@
 <div class="space-y-6">
   <!-- Header -->
   <div>
-    <h1 class="text-3xl font-bold text-slate-800 bg-gradient-to-r from-green-500 to-emerald-500 text-gradient">Comptabilité</h1>
-    <p class="text-slate-500 mt-1">Vue d'ensemble de la facturation client.</p>
+    <h1 class="text-4xl font-bold text-slate-800 bg-gradient-to-r from-green-500 to-emerald-500 text-gradient">Comptabilité</h1>
+    <p class="text-slate-600 mt-1 text-sm">Gérez les factures, suivez les paiements et analysez vos finances.</p>
   </div>
-  <div class="bg-white rounded-2xl shadow-lg border p-6">
-    <p class="text-slate-500 text-center">This feature is a work in progress.</p>
+
+  <!-- Tabs -->
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <button (click)="activeTab.set('factures')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'factures' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Factures</button>
+      <button (click)="activeTab.set('paiements')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'paiements' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Paiements</button>
+      <button (click)="activeTab.set('depenses')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'depenses' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Dépenses</button>
+      <button (click)="activeTab.set('notifications')" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" [class]="activeTab() === 'notifications' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">Notifications par e-mail</button>
+    </nav>
   </div>
+
+  <!-- Factures Tab -->
+  @if (activeTab() === 'factures') {
+    <div class="space-y-4">
+      <!-- Filters -->
+      <div class="p-4 bg-emerald-50 rounded-2xl shadow-lg border grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Client Filter -->
+          <div>
+              <label class="text-xs text-slate-500">Client</label>
+              <select (change)="filterClient.set($any($event.target).value)" class="mt-1 appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                  <option value="all">Tous les clients</option>
+                  @for(client of clients(); track client.id) {
+                    <option [value]="client.id">{{client.company_name}}</option>
+                  }
+              </select>
+          </div>
+          <!-- Status Filter -->
+           <div>
+              <label class="text-xs text-slate-500">Statut</label>
+              <select (change)="filterStatus.set($any($event.target).value)" class="mt-1 appearance-none block w-full h-11 px-4 pr-10 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white">
+                  <option value="all">Tous les statuts</option>
+                  <option>En attente</option><option>Payée</option><option>En retard</option><option>Partiellement payée</option><option>Annulée</option>
+              </select>
+          </div>
+          <!-- Date Filters -->
+          <div>
+              <label class="text-xs text-slate-500">Date de début</label>
+              <input type="date" (input)="filterStartDate.set($any($event.target).value)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+          </div>
+           <div>
+              <label class="text-xs text-slate-500">Date de fin</label>
+              <input type="date" (input)="filterEndDate.set($any($event.target).value)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+          </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="p-4 bg-emerald-50 rounded-2xl shadow-lg border grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+          <div><p class="text-xs text-slate-500">Factures Affichées</p><p class="text-xl font-bold">{{invoicesSummary().count}}</p></div>
+          <div><p class="text-xs text-slate-500">Montant Total</p><p class="text-xl font-bold">{{invoicesSummary().totalAmount.toFixed(2)}} €</p></div>
+          <div><p class="text-xs text-slate-500">Montant Payé</p><p class="text-xl font-bold text-green-600">{{invoicesSummary().amountPaid.toFixed(2)}} €</p></div>
+          <div><p class="text-xs text-slate-500">Montant Dû</p><p class="text-xl font-bold text-amber-600">{{invoicesSummary().amountDue.toFixed(2)}} €</p></div>
+          <div><p class="text-xs text-slate-500">Factures en Retard</p><p class="text-xl font-bold text-red-600">{{invoicesSummary().overdueCount}}</p></div>
+      </div>
+
+      <!-- Invoices Table -->
+      <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+        <div class="p-4 flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold">Toutes les Factures</h3>
+            @if (selectedInvoices().size > 0) {
+              <span class="text-sm text-slate-600 ml-2">{{ selectedInvoices().size }} sélectionnée(s)</span>
+            }
+          </div>
+          <div class="flex items-center gap-2">
+            @if (selectedInvoices().size > 0) {
+              <button (click)="deleteSelectedInvoices()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-xl shadow-lg transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                <span>Supprimer</span>
+              </button>
+            }
+            <button (click)="addInvoice()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Nouvelle Facture</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="px-6 py-3 text-left">
+                        <input type="checkbox"
+                               class="custom-checkbox"
+                               [checked]="areAllFilteredInvoicesSelected()"
+                               (change)="toggleSelectAll()">
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Facture #</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Client</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date de Renouvellement</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Montant Total</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Statut</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">
+              @for(invoice of filteredInvoices(); track invoice.id){
+                <tr class="hover:bg-slate-50" [class.bg-blue-50]="selectedInvoices().has(invoice.id)">
+                  <td class="px-6 py-4">
+                      <input type="checkbox"
+                             class="custom-checkbox"
+                             [checked]="selectedInvoices().has(invoice.id)"
+                             (change)="toggleInvoiceSelection(invoice.id, $event)">
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{invoice.invoice_number}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{getClientName(invoice.clientId)}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{invoice.date}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{invoice.renewal_date}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">{{ getInvoiceTotal(invoice).totalWithTVA.toFixed(2) }} {{ getCurrencySymbol(invoice.currency) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [class]="invoice.status === 'Payée' ? 'bg-green-100 text-green-800' : invoice.status === 'En retard' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'">{{invoice.status}}</span></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
+                      <button (click)="editInvoice(invoice)" class="p-2 text-indigo-600 hover:bg-indigo-100 rounded-lg transition-colors">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L16.732 3.732z" /></svg>
+                      </button>
+                      <button (click)="deleteInvoice(invoice.id)" class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  } @else if (activeTab() === 'paiements') {
+    <div class="space-y-4">
+      <div class="bg-white rounded-2xl shadow-lg border overflow-hidden">
+        <div class="p-4 flex justify-between items-center">
+          <h3 class="text-lg font-semibold">Tous les Paiements</h3>
+          <button (click)="addPayment()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Ajouter un Paiement</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Facture #</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Client</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date de paiement</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Montant</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mode de paiement</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-200">
+              @for(payment of payments(); track payment.id){
+                <tr class="hover:bg-slate-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-600">{{getInvoiceNumber(payment.invoice_id)}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{getClientNameForInvoice(payment.invoice_id)}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{payment.date}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700">{{payment.amount.toFixed(2)}} €</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{payment.method}}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button (click)="deletePayment(payment.id)" class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  } @else if (activeTab() === 'notifications') {
+    <div class="space-y-6">
+      <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+        <h3 class="font-semibold text-blue-800">Automatisez vos rappels de paiement</h3>
+        <p class="text-sm text-blue-700 mt-1">Configurez l'envoi automatique d'e-mails via Postmark pour les factures à échéance ou en retard. Utilisez les variables comme <code class="bg-blue-100 text-blue-800 px-1 rounded">[client_name]</code>, <code class="bg-blue-100 text-blue-800 px-1 rounded">[client_email]</code>, <code class="bg-blue-100 text-blue-800 px-1 rounded">[invoice_number]</code>, <code class="bg-blue-100 text-blue-800 px-1 rounded">[renewal_date]</code>, <code class="bg-blue-100 text-blue-800 px-1 rounded">[amount]</code>, <code class="bg-blue-100 text-blue-800 px-1 rounded">[company_name]</code> pour personnaliser vos messages.</p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Upcoming Renewals Card -->
+        <div class="bg-white rounded-2xl shadow-lg border p-6 space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800">Factures arrivant à échéance</h3>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" [checked]="localEmailSettings().upcomingRenewal.enabled" (change)="updateEmailSettingField('upcomingRenewal', 'enabled', $event)">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+            </label>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Délais de rappel (en jours avant échéance)</label>
+            <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+              @for(day of availableNotificationDays; track day) {
+                <label class="flex items-center space-x-2 cursor-pointer">
+                  <input type="checkbox" class="custom-checkbox" [checked]="localEmailSettings().upcomingRenewal.days.includes(day)" (change)="toggleNotificationDay('upcomingRenewal', day)">
+                  <span>{{ day }} jours</span>
+                </label>
+              }
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Destinataires</label>
+            <input type="text" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().upcomingRenewal.recipients" (input)="updateEmailSettingField('upcomingRenewal', 'recipients', $event)">
+            <p class="text-xs text-slate-500 mt-1">Séparez les e-mails par des virgules. Utilisez <code class="text-xs bg-slate-100 p-0.5 rounded">[client_email]</code> pour l'e-mail du client.</p>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Objet de l'e-mail</label>
+            <input type="text" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().upcomingRenewal.subject" (input)="updateEmailSettingField('upcomingRenewal', 'subject', $event)">
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Corps de l'e-mail</label>
+            <textarea rows="6" class="mt-1 block w-full p-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().upcomingRenewal.body" (input)="updateEmailSettingField('upcomingRenewal', 'body', $event)"></textarea>
+          </div>
+        </div>
+
+        <!-- Overdue Invoices Card -->
+        <div class="bg-white rounded-2xl shadow-lg border p-6 space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-bold text-slate-800">Factures expirées</h3>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" [checked]="localEmailSettings().overdue.enabled" (change)="updateEmailSettingField('overdue', 'enabled', $event)">
+              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
+            </label>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Délais de rappel (en jours après expiration)</label>
+            <div class="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+               @for(day of availableNotificationDays; track day) {
+                <label class="flex items-center space-x-2 cursor-pointer">
+                  <input type="checkbox" class="custom-checkbox" [checked]="localEmailSettings().overdue.days.includes(day)" (change)="toggleNotificationDay('overdue', day)">
+                  <span>{{ day }} jours</span>
+                </label>
+              }
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Destinataires</label>
+            <input type="text" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().overdue.recipients" (input)="updateEmailSettingField('overdue', 'recipients', $event)">
+            <p class="text-xs text-slate-500 mt-1">Séparez les e-mails par des virgules. Utilisez <code class="text-xs bg-slate-100 p-0.5 rounded">[client_email]</code> pour l'e-mail du client.</p>
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Objet de l'e-mail</label>
+            <input type="text" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().overdue.subject" (input)="updateEmailSettingField('overdue', 'subject', $event)">
+          </div>
+          <div>
+            <label class="text-xs text-slate-500">Corps de l'e-mail</label>
+            <textarea rows="6" class="mt-1 block w-full p-4 border border-gray-300 rounded-xl" [value]="localEmailSettings().overdue.body" (input)="updateEmailSettingField('overdue', 'body', $event)"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end items-center gap-4 pt-4 border-t mt-6">
+        @if (manualReportFeedback(); as feedback) {
+          <div class="p-3 rounded-lg text-sm mr-auto font-medium"
+               [class]="{
+                 'bg-green-100 text-green-800': feedback.type === 'success',
+                 'bg-red-100 text-red-800': feedback.type === 'error',
+                 'bg-blue-100 text-blue-800': feedback.type === 'info'
+               }">
+            {{ feedback.message }}
+          </div>
+        }
+        <button (click)="sendManualOverdueReport()" 
+                class="bg-rose-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg hover:bg-rose-700 transition w-auto h-11 flex items-center justify-center min-w-[280px]"
+                [disabled]="manualReportStatus() === 'sending'">
+          @if (manualReportStatus() === 'sending') { 
+            <span>Envoi en cours...</span> 
+          } @else {
+            <span class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              <span>Envoyer le rapport des factures expirées</span>
+            </span>
+          }
+        </button>
+        <button (click)="saveEmailSettings()" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-xl shadow-lg hover:bg-indigo-700 transition w-48 h-11" [disabled]="saveStatus() === 'saving'">
+          @if (saveStatus() === 'idle') { <span>Enregistrer</span> }
+          @if (saveStatus() === 'saving') { <span>Sauvegarde...</span> }
+          @if (saveStatus() === 'saved') { <span>Enregistré !</span> }
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="p-8 text-center bg-white rounded-2xl shadow-lg border">
+      <h3 class="text-lg font-semibold">Bientôt disponible</h3>
+      <p class="text-slate-600 mt-2 text-sm">Ce panneau est en cours de construction.</p>
+    </div>
+  }
 </div>
+
+<!-- Invoice Form Modal -->
+@if(showInvoiceForm()) {
+    <div class="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col">
+          <div class="flex justify-between items-center p-6 border-b"><h2 class="text-3xl font-bold text-slate-800">Créer/Modifier Facture</h2><button (click)="cancelInvoiceForm()" class="p-2 rounded-full hover:bg-slate-100">&times;</button></div>
+          <form class="p-6 overflow-y-auto" (submit)="$event.preventDefault(); saveInvoice()">
+            <!-- Invoice Header -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="md:col-span-2">
+                <label class="text-xs text-slate-500">Client</label>
+                <select [value]="currentInvoice().clientId" (change)="updateInvoiceField('clientId', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl">
+                  <option value="0" disabled>Sélectionner un client</option>
+                  @for(client of clients(); track client.id){ <option [value]="client.id">{{client.company_name}}</option> }
+                </select>
+              </div>
+              <div>
+                <label class="text-xs text-slate-500">N° de Facture</label>
+                <input type="text" [value]="currentInvoice().invoice_number" (input)="updateInvoiceField('invoice_number', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500">Date d'émission</label>
+                <input type="date" [value]="currentInvoice().date" (input)="updateInvoiceField('date', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500">Date de renouvellement</label>
+                <input type="date" [value]="currentInvoice().renewal_date" (input)="updateInvoiceField('renewal_date', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500">Statut</label>
+                <select [value]="currentInvoice().status" (change)="updateInvoiceField('status', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl">
+                   <option>En attente</option><option>Payée</option><option>En retard</option><option>Partiellement payée</option><option>Annulée</option>
+                </select>
+              </div>
+               <div>
+                <label class="text-xs text-slate-500">Devise</label>
+                <select [value]="currentInvoice().currency" (change)="updateInvoiceField('currency', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl bg-white">
+                    <option value="EUR">EUR (€)</option>
+                    <option value="MAD">MAD</option>
+                    <option value="USD">USD ($)</option>
+                </select>
+              </div>
+               <div>
+                <label class="text-xs text-slate-500">Mode de paiement</label>
+                <select [value]="currentInvoice().payment_method" (change)="updateInvoiceField('payment_method', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl">
+                    @for(method of paymentMethods(); track method.id){
+                        <option [value]="method.name">{{method.name}}</option>
+                    }
+                </select>
+              </div>
+              <div class="flex items-center pt-5">
+                 <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="renouvellement" class="custom-checkbox" [checked]="currentInvoice().renouvellement" (change)="updateInvoiceField('renouvellement', $event)">
+                    <span class="text-sm font-medium text-slate-700">Renouvellement</span>
+                </label>
+              </div>
+            </div>
+            <!-- Line Items -->
+            <div class="mt-6 border-t pt-4">
+              <div class="flex justify-between items-center mb-2">
+                <h3 class="font-semibold text-slate-800">Lignes de la facture</h3>
+                <button (click)="addLineItem()" type="button" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">+ Ajouter une ligne</button>
+              </div>
+
+              <!-- Line Item Headers -->
+              <div class="grid grid-cols-[2fr,1.5fr,80px,100px,100px,auto] gap-2 mt-2 text-xs font-medium text-slate-500 px-1">
+                <span>Description</span>
+                <span>Service Associé (Optionnel)</span>
+                <span class="text-center">Qté</span>
+                <span class="text-right">Prix Unitaire</span>
+                <span class="text-center">TVA %</span>
+                <span></span> <!-- for delete button -->
+              </div>
+
+              @if (currentInvoice().line_items.length === 0) {
+                <div class="text-center py-8 border-2 border-dashed rounded-lg mt-2">
+                  <p class="text-slate-600 text-sm">Aucune ligne ajoutée.</p>
+                </div>
+              } @else {
+                  @for(item of currentInvoice().line_items; track item.id; let i = $index) {
+                    <div class="grid grid-cols-[2fr,1.5fr,80px,100px,100px,auto] gap-2 mt-1 items-center">
+                      <!-- Description -->
+                      <input type="text" placeholder="Ex: Intervention ponctuelle" [value]="item.description" (input)="updateLineItem(i, 'description', $event)" class="h-11 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                      
+                      <!-- Associated Service -->
+                      <select [value]="item.serviceId || ''" (change)="onServiceSelected(i, $event)" class="h-11 px-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white">
+                        <option value="">-- Prestation personnalisée --</option>
+                        @for(service of servicesForSelectedClient(); track service.id) {
+                          <option [value]="service.id">{{service.service_name}}</option>
+                        }
+                      </select>
+
+                      <!-- Quantity -->
+                      <input type="number" placeholder="Qté" [value]="item.quantity" (input)="updateLineItem(i, 'quantity', $event)" class="h-11 px-2 border border-gray-300 rounded-xl text-center text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                      
+                      <!-- Unit Price -->
+                      <input type="number" placeholder="Prix" [value]="item.unit_price" (input)="updateLineItem(i, 'unit_price', $event)" class="h-11 px-2 border border-gray-300 rounded-xl text-right text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                      
+                      <!-- TVA -->
+                      <select [value]="item.tva" (change)="updateLineItem(i, 'tva', $event)" class="h-11 px-2 border border-gray-300 rounded-xl text-center text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white">
+                          <option value="20">20%</option>
+                          <option value="10">10%</option>
+                          <option value="5.5">5.5%</option>
+                          <option value="2.1">2.1%</option>
+                          <option value="0">0%</option>
+                      </select>
+                      
+                      <!-- Delete Button -->
+                      <button type="button" (click)="removeLineItem(i)" class="p-2 text-red-500 hover:bg-red-100 rounded-full h-8 w-8 flex items-center justify-center transition-colors">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                      </button>
+                    </div>
+                  }
+              }
+            </div>
+            <!-- Totals -->
+            <div class="mt-6 border-t pt-4 text-right space-y-1">
+                <p>Sous-total: {{getInvoiceTotal(currentInvoice()).subTotal.toFixed(2)}} {{getCurrencySymbol(currentInvoice().currency)}}</p>
+                <p>TVA: {{getInvoiceTotal(currentInvoice()).tvaAmount.toFixed(2)}} {{getCurrencySymbol(currentInvoice().currency)}}</p>
+                <p class="font-bold text-lg">Total: {{getInvoiceTotal(currentInvoice()).totalWithTVA.toFixed(2)}} {{getCurrencySymbol(currentInvoice().currency)}}</p>
+            </div>
+          </form>
+          <div class="flex justify-end gap-4 p-6 border-t bg-slate-50"><button (click)="cancelInvoiceForm()" type="button" class="bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-xl">Annuler</button><button (click)="saveInvoice()" type="button" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-2 px-4 rounded-xl">Enregistrer</button></div>
+        </div>
+    </div>
+}
+
+<!-- Payment Form Modal -->
+@if(showPaymentForm()) {
+    <div class="fixed inset-0 bg-black bg-opacity-60 z-40 flex justify-center items-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6">{{ editingPayment() ? 'Modifier le' : 'Ajouter un' }} Paiement</h2>
+            <form (submit)="$event.preventDefault(); savePayment()">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs text-slate-500">Facture Associée</label>
+                        <select [value]="currentPayment().invoice_id" (change)="updateCurrentPaymentField('invoice_id', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl" required>
+                            <option value="0" disabled>Sélectionner une facture</option>
+                            @for(invoice of invoices(); track invoice.id){ 
+                                <option [value]="invoice.id">{{invoice.invoice_number}} - {{getClientName(invoice.clientId)}}</option> 
+                            }
+                        </select>
+                    </div>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs text-slate-500">Montant</label>
+                            <input type="number" [value]="currentPayment().amount" (input)="updateCurrentPaymentField('amount', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" required>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-500">Date de paiement</label>
+                            <input type="date" [value]="currentPayment().date" (input)="updateCurrentPaymentField('date', $event)" class="mt-1 block w-full h-11 px-4 border border-gray-300 rounded-xl" required>
+                        </div>
+                    </div>
+                     <div>
+                        <label class="text-xs text-slate-500">Mode de paiement</label>
+                        <select [value]="currentPayment().method" (change)="updateCurrentPaymentField('method', $event)" class="mt-1 appearance-none block w-full h-11 px-4 border border-gray-300 rounded-xl" required>
+                            @for(method of paymentMethods(); track method.id){ 
+                                <option [value]="method.name">{{method.name}}</option> 
+                            }
+                        </select>
+                    </div>
+                    <div class="flex justify-end gap-4 pt-6">
+                        <button type="button" (click)="cancelPaymentForm()" class="bg-slate-100 text-slate-700 font-bold py-2 px-4 rounded-xl hover:bg-slate-200 transition">Annuler</button>
+                        <button type="submit" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transition">Enregistrer le Paiement</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

@@ -1,3 +1,4 @@
+
 import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -8,14 +9,13 @@ import { DashboardComponent } from './src/components/dashboard/dashboard.compone
 import { ClientsComponent } from './src/components/clients/clients.component';
 import { ServicesComponent } from './src/components/services/services.component';
 import { ProjectsComponent } from './src/components/projects/projects.component';
-import { AccountingComponent } from './src/components/accounting/accounting.component';
-import { ReportsComponent } from './src/components/reports/reports.component';
+import { ComptabiliteComponent } from './src/components/comptabilite/comptabilite.component';
 import { ConfigurationComponent } from './src/components/configuration/configuration.component';
 import { SettingsComponent } from './src/components/settings/settings.component';
 import { ConfigurationService } from './src/services/configuration.service';
 import { ClientService } from './src/services/client.service';
 import { ServiceService } from './src/services/service.service';
-import { LanguageService } from './src/services/language.service';
+import { EmailService } from './src/services/email.service';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -26,8 +26,7 @@ bootstrapApplication(AppComponent, {
       { path: 'clients', component: ClientsComponent },
       { path: 'services', component: ServicesComponent },
       { path: 'projects', component: ProjectsComponent },
-      { path: 'accounting', component: AccountingComponent },
-      { path: 'reports', component: ReportsComponent },
+      { path: 'comptabilite', component: ComptabiliteComponent },
       { path: 'configuration', component: ConfigurationComponent },
       { path: 'settings', component: SettingsComponent },
       { path: '**', redirectTo: 'dashboard' } // Fallback route
@@ -35,7 +34,7 @@ bootstrapApplication(AppComponent, {
     ConfigurationService,
     ClientService,
     ServiceService,
-    LanguageService,
+    EmailService,
   ],
 }).catch((err) => console.error(err));
 

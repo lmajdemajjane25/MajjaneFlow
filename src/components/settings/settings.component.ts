@@ -10,9 +10,9 @@ import { CommonModule } from '@angular/common';
 })
 export class SettingsComponent {
     settingCards = [
-        { title: 'Profile Settings', description: 'Manage your profile information and preferences.', icon: 'user' },
-        { title: 'Notifications', description: 'Configure email alerts for important events.', icon: 'bell' },
-        { title: 'Security', description: 'Update your password and manage security settings.', icon: 'shield' },
-        { title: 'Preferences', description: 'Customize your application experience.', icon: 'settings' },
+        { title: 'Paramètres du Profil', description: 'Gérez vos informations de profil et vos préférences.', icon: 'user' },
+        { title: 'Notifications', description: 'Configurez les alertes par e-mail pour les événements importants.', icon: 'bell' },
+        { title: 'Sécurité', description: 'Mettez à jour votre mot de passe et gérez les paramètres de sécurité.', icon: 'shield' },
+        { title: 'Préférences', description: 'Personnalisez votre expérience applicative.', icon: 'settings' },
     ];
 }

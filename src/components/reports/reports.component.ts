@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { LanguageService } from '../../services/language.service';
+
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-reports',
@@ -7,5 +7,4 @@ import { LanguageService } from '../../services/language.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsComponent {
-  public languageService = inject(LanguageService);
 }
